@@ -1,127 +1,79 @@
 "use client"
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { createTheme } from '@mui/material/styles';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import DescriptionIcon from '@mui/icons-material/Description';
-import LayersIcon from '@mui/icons-material/Layers';
-import { AppProvider } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import type { Router, Navigation } from '@toolpad/core';
+import React, { useState } from 'react';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from '@ant-design/icons';
+import { Button, Layout, Menu, theme } from 'antd';
 
-const NAVIGATION: Navigation = [
-    {
-      kind: 'header',
-      title: 'Main items',
-    },
-    {
-      segment: 'dashboard',
-      title: 'Dashboard',
-      icon: <DashboardIcon />,
-    },
-    {
-      segment: 'orders',
-      title: 'Orders',
-      icon: <ShoppingCartIcon />,
-    },
-    {
-      kind: 'divider',
-    },
-    {
-      kind: 'header',
-      title: 'Analytics',
-    },
-    {
-      segment: 'reports',
-      title: 'Reports',
-      icon: <BarChartIcon />,
-      children: [
-        {
-          segment: 'sales',
-          title: 'Sales',
-          icon: <DescriptionIcon />,
-        },
-        {
-          segment: 'traffic',
-          title: 'Traffic',
-          icon: <DescriptionIcon />,
-        },
-      ],
-    },
-    {
-      segment: 'integrations',
-      title: 'Integrations',
-      icon: <LayersIcon />,
-    },
-];
+const { Header, Sider, Content } = Layout;
+
+type Props = {
+  children: React.ReactNode;
+};
+const DashboardLayout = ({children}: Readonly<Props>) => {
   
-const theme = createTheme({
-    cssVariables: {
-        colorSchemeSelector: 'data-toolpad-color-scheme',
-    },
-    colorSchemes: { light: true, dark: true },
-    breakpoints: {
-        values: {
-        xs: 0,
-        sm: 600,
-        md: 600,
-        lg: 1200,
-        xl: 1536,
-        },
-    },
-});
-
-function PageContent({ content }: { content: React.ReactNode }) {
-    return (
-      <Box
-        sx={{
-          py: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
-        }}
-      >
-        {content}
-      </Box>
-    );
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+  return (
+    <Layout>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="demo-logo-vertical" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          items={[
+            {
+              key: '1',
+              icon: <UserOutlined />,
+              label: 'nav 1',
+            },
+            {
+              key: '2',
+              icon: <VideoCameraOutlined />,
+              label: 'nav 2',
+            },
+            {
+              key: '3',
+              icon: <UploadOutlined />,
+              label: 'nav 3',
+            },
+          ]}
+        />
+      </Sider>
+      <Layout>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              fontSize: '16px',
+              width: 64,
+              height: 64,
+            }}
+          />
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            minHeight: 280,
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+          }}
+        >
+          {children}
+        </Content>
+      </Layout>
+    </Layout>
+  );
 }
 
-interface Props {
-    window?: () => Window;
-}
-
-export default function Layout({
-    props = {},
-    children,
-  }: Readonly<{
-    props: Props;
-    children: React.ReactNode;
-  }>) {
-    const { window } = props;
-
-    const [pathname, setPathname] = React.useState('/dashboard');
-    const router = React.useMemo<Router>(() => {
-        return {
-          pathname,
-          searchParams: new URLSearchParams(),
-          navigate: (path) => setPathname(String(path)),
-        };
-    }, [pathname]);
-    const mWindow = window !== undefined ? window() : undefined;
-
-    return (
-        <AppProvider
-        navigation={NAVIGATION}
-        router={router}
-        theme={theme}
-        window={mWindow}
-      >
-        <DashboardLayout>
-          <PageContent content={children} />
-        </DashboardLayout>
-      </AppProvider>
-    );
-  }
+export default DashboardLayout

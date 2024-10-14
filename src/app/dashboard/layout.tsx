@@ -1,79 +1,49 @@
 "use client"
-import React, { useState } from 'react';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
+import Logo from "@/components/Logo";
+import MenuList from "@/components/MenuList";
+import ToggleThemeButton from "@/components/ToggleThemeButton";
+import {Button, Layout, theme} from "antd";
+import { useState } from "react";
+import {MenuUnfoldOutlined, MenuFoldOutlined} from "@ant-design/icons";
 
-const { Header, Sider, Content } = Layout;
+const { Header, Sider, Content} = Layout;
 
-type Props = {
+export default function DashboardLayout({
+  children,
+}: Readonly<{
   children: React.ReactNode;
-};
-const DashboardLayout = ({children}: Readonly<Props>) => {
-  
+}>) {
+  const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+  const toggleTheme = ()=> {
+    setDarkTheme(!darkTheme);
+  }
+
   const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+    token : {colorBgContainer}
+  } = theme.useToken()
   return (
-    <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
-            },
-            {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
-            },
-          ]}
-        />
-      </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-            }}
-          />
-        </Header>
-        <Content
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          {children}
-        </Content>
+    <>
+      <Layout className="h-screen overflow-auto">
+        <Sider 
+          collapsed={collapsed} 
+          collapsible
+          trigger={null}
+          theme={darkTheme ? 'dark' : 'light'} 
+          className="bg-white">
+          <Logo/>
+          <MenuList darkTheme={darkTheme}/>
+          <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme}/>
+        </Sider>
+        <Layout>
+          <Header className={`sticky p-0 bg-[${colorBgContainer}]`}>
+            <Button type="text" className="ml-4 text-white"  onClick={() => setCollapsed(!collapsed)} icon={collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}/>
+          </Header>
+          <Layout>
+            <Content>{children}</Content>
+          </Layout>
+        </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 }
-
-export default DashboardLayout

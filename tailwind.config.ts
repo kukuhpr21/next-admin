@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindScrollbar from "tailwind-scrollbar";
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,9 +15,18 @@ const config: Config = {
       fontFamily: {
         Montserrat: "Montserrat",
       },
+      scrollbarWidth: {
+        thin: 'thin',
+        auto: 'auto',
+        none: 'none',
+      },
     },
   },
+  variants: {
+    scrollbar: ['responsive'], // Enable scrollbar variants
+  },
   plugins: [
+    tailwindScrollbar
   ],
 };
 export default config;

@@ -1,24 +1,25 @@
-import {Menu} from "antd";
-import {AppstoreOutlined, AreaChartOutlined, BarsOutlined, HomeOutlined, PayCircleOutlined, SettingOutlined}  from "@ant-design/icons";
+import { Menu } from "antd";
+import { AppstoreOutlined, AreaChartOutlined, BarsOutlined, HomeOutlined, PayCircleOutlined, SettingOutlined } from "@ant-design/icons";
 import React from "react";
+import Link from "next/link";
 
 
-const MenuList = ({darkTheme}: {darkTheme: boolean}) => {
+const MenuList = ({ darkTheme }: { darkTheme: boolean }) => {
     const menuItems = [
         {
             "key": "home",
-            "label": "Home",
-            "icon":  React.createElement(HomeOutlined)
+            "label": (<Link href='/dashboard'>Home</Link>),
+            "icon": React.createElement(HomeOutlined)
         },
         {
             "key": "activity",
-            "label": "Activity",
-            "icon":  React.createElement(AppstoreOutlined)
+            "label": (<Link href='/activity'>Activity</Link>),
+            "icon": React.createElement(AppstoreOutlined)
         },
         {
             "key": "tasks",
             "label": "Tasks",
-            "icon":  React.createElement(BarsOutlined),
+            "icon": React.createElement(BarsOutlined),
             "children": [
                 {
                     "key": "task-1",
@@ -47,23 +48,23 @@ const MenuList = ({darkTheme}: {darkTheme: boolean}) => {
         {
             "key": "progress",
             "label": "Progress",
-            "icon":  React.createElement(AreaChartOutlined)
+            "icon": React.createElement(AreaChartOutlined)
         },
         {
             "key": "payment",
             "label": "Payment",
-            "icon":  React.createElement(PayCircleOutlined)
+            "icon": React.createElement(PayCircleOutlined)
         },
         {
             "key": "setting",
             "label": "Setting",
-            "icon":  React.createElement(SettingOutlined)
+            "icon": React.createElement(SettingOutlined)
         }
     ];
-  return (
-    <Menu items={menuItems} theme={darkTheme ? 'dark' : 'light'} mode="inline" className="flex flex-col  h-full gap-4 text-base">
-    </Menu>
-  )
+    return (
+        <Menu items={menuItems} theme={darkTheme ? 'dark' : 'light'} mode="inline" className="flex flex-col  h-full gap-2 text-sm">
+        </Menu>
+    )
 }
 
 export default MenuList
